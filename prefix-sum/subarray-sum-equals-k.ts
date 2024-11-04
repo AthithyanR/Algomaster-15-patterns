@@ -28,11 +28,11 @@ function subarraySum(nums: number[], k: number): number {
     return count;
 };
 
-Deno.test(function subarraySumTest() {
+Deno.test(function test() {
     assertEquals(subarraySum([1, 1, 1], 2), 2);
 });
 
 
-Deno.test(function subarraySumTest() {
+Deno.test(function test() {
     assertEquals(subarraySum([1, 2, 3], 3), 2);
 });
