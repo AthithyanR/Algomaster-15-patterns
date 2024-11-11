@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-inner-declarations
 import { assertEquals } from "@std/assert";
 
 // Write an algorithm to determine if a number n is happy.
@@ -7,26 +8,68 @@ import { assertEquals } from "@std/assert";
 // Those numbers for which this process ends in 1 are happy.
 // Return true if n is a happy number, and false if not.
 
-function isHappy(n: number): boolean {
-    const visited = new Set<number>([]);
+{
+    function isHappy(n: number): boolean {
+        const visited = new Set<number>([]);
 
-    while (!visited.has(n)) {
-        visited.add(n);
-        const next = n.toString().split('').reduce((acc, curr) => acc + (Math.pow(Number(curr), 2)), 0);
+        while (!visited.has(n)) {
+            visited.add(n);
+            const next = n.toString().split("").reduce(
+                (acc, curr) => acc + (Math.pow(Number(curr), 2)),
+                0,
+            );
 
-        if (next === 1) {
-            return true;
+            if (next === 1) {
+                return true;
+            }
+            n = next;
         }
-        n = next;
+
+        return false;
     }
 
-    return false
-};
+    Deno.test(function test() {
+        assertEquals(isHappy(19), true);
+    });
 
-Deno.test(function test() {
-    assertEquals(isHappy(19), true);
-});
+    Deno.test(function test() {
+        assertEquals(isHappy(2), false);
+    });
+}
 
-Deno.test(function test() {
-    assertEquals(isHappy(2), false);
-});
+// using pointers - when space is a constraint
+{
+    function isHappy(n: number): boolean {
+        function get_next(num: number): number {
+            return num.toString()
+                .split('')
+                .reduce((acc, curr) => acc + Math.pow(Number(curr), 2), 0)
+        }
+
+        let slow = n;
+        let fast = n;
+
+        while (n !== 1) {
+            slow = get_next(slow);
+            fast = get_next(get_next(fast));
+
+            if (fast === 1) {
+                return true;
+            }
+
+            if (slow === fast) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    Deno.test(function test() {
+        assertEquals(isHappy(19), true);
+    });
+
+    Deno.test(function test() {
+        assertEquals(isHappy(2), false);
+    });
+}
